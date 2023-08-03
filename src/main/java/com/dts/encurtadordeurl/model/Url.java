@@ -12,5 +12,5 @@ public class Url {
     private Integer id;
     private String originalUrl;
     private String shortUrl;
-    private Integer clickCounter;
+    private long accessCounter;
 }

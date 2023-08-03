@@ -45,13 +45,35 @@ public class UrlService {
         return shortURL;
     }
 
-        public LongUrlDto getLongUrl(String shortUrl){
-        Url urlRegistrada = urlRepository.findByShortUrl(shortUrl).get();
+    public LongUrlDto getLongUrl(String shortUrl){
+        Url registeredShortUrl = urlRepository.findByShortUrl(shortUrl).get();
         LongUrlDto originalUrl = new LongUrlDto();
-        BeanUtils.copyProperties(urlRegistrada, originalUrl);
+        BeanUtils.copyProperties(registeredShortUrl, originalUrl);
+
+        accessUrl(registeredShortUrl.getId());
 
         return originalUrl;
     }
 
+    public void accessUrl(Integer id) {
+        Url url = urlRepository.findById(id).orElse(null);
+
+        if (url != null) {
+            url.setAccessCounter(url.getAccessCounter() + 1);
+            urlRepository.save(url);
+        }
+    }
+
+    public String getAccessUrl(Integer id){
+        Url url = urlRepository.findById(id).orElse(null);
+
+        if (url != null) {
+            return "Esta URL foi acessada " + url.getAccessCounter() + " vezes.";
+        } else {
+            return "URL não encontrada.";
+        }
+    }
+
 
 }
+
